@@ -1,6 +1,7 @@
 package edu.jl.springrediscache.model;
 
 import jakarta.persistence.*;
+import org.springframework.data.redis.core.RedisHash;
 
 import java.util.Objects;
 
@@ -10,17 +11,17 @@ public class CarModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "car_id")
-    private Long id;
+    private long id;
     private String make;
     private String model;
     @Column(name = "year_of_release")
-    private Short yearOfRelease;
+    private short yearOfRelease;
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -40,11 +41,11 @@ public class CarModel {
         this.model = model;
     }
 
-    public Short getYearOfRelease() {
+    public short getYearOfRelease() {
         return yearOfRelease;
     }
 
-    public void setYearOfRelease(Short yearOfRelease) {
+    public void setYearOfRelease(short yearOfRelease) {
         this.yearOfRelease = yearOfRelease;
     }
 
@@ -53,7 +54,7 @@ public class CarModel {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
         CarModel carModel = (CarModel) object;
-        return Objects.equals(id, carModel.id) && Objects.equals(make, carModel.make) && Objects.equals(model, carModel.model) && Objects.equals(yearOfRelease, carModel.yearOfRelease);
+        return id == carModel.id && yearOfRelease == carModel.yearOfRelease && Objects.equals(make, carModel.make) && Objects.equals(model, carModel.model);
     }
 
     @Override

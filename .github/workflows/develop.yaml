@@ -27,6 +27,3 @@ jobs:
 
       - name: Run Maven verify phase
         run: mvn --batch-mode --update-snapshots verify
-
-      - name: Stop and remove databases
-        run: docker compose down
