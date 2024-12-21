@@ -9,5 +9,8 @@ import java.util.Optional;
 
 public interface CarRepository extends JpaRepository<CarModel, Long> {
     @Query("SELECT car FROM CarModel car WHERE car.id = :id")
-    Optional<CarModel> findById(@Param("id") long id);
+    Optional<CarModel> findCarById(@Param("id") long id);
+
+    @Query("DELETE FROM CarModel car WHERE car.id = :id")
+    void deleteCarById(@Param("id") long id);
 }
