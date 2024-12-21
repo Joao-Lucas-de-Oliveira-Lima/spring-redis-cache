@@ -26,7 +26,7 @@ public class CarServiceImplementation implements CarService {
     }
 
     @Override
-    @Cacheable(value = "cars", key = "#id")
+    @Cacheable(value = "car", key = "#id")
     public CarResponseDTO findByIdWithCacheSupport(Long id) throws ResourceNotFoundException {
         //System.out.printf("Searching for car with id: %s.%n", id);
         CarModel carFound = carRepository.findById(id)
@@ -43,14 +43,14 @@ public class CarServiceImplementation implements CarService {
     }
 
     @Override
-    @CacheEvict(value = "cars", key = "#id")
+    @CacheEvict(value = "car", key = "#id")
     public void deleteById(Long id) {
         carRepository.deleteById(id);
     }
 
     @Override
     @Transactional
-    @CachePut(value = "cars", key = "#id")
+    @CachePut(value = "car", key = "#id")
     public CarResponseDTO updateById(Long id, CarRequestDTO update) throws ResourceNotFoundException{
         CarModel carToBeUpdated = carRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(String.format("Car with id %s not found!", id)));
@@ -59,4 +59,10 @@ public class CarServiceImplementation implements CarService {
         return mapper.convertToObject(updatedCar, CarResponseDTO.class);
     }
 
+    @Override
+    @CachePut(value = "car", key = "#result.id")
+    public CarResponseDTO save(CarRequestDTO newCar) {
+        CarModel carSaved = carRepository.save(mapper.convertToObject(newCar, CarModel.class));
+        return mapper.convertToObject(carSaved, CarResponseDTO.class);
+    }
 }
