@@ -1,9 +1,9 @@
 package edu.jl.springrediscache.controller;
 
+import edu.jl.springrediscache.dto.car.CarRequestDTO;
 import edu.jl.springrediscache.dto.car.CarResponseDTO;
 import edu.jl.springrediscache.service.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,10 +29,18 @@ public class CarController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable("id") Long id){
+    public ResponseEntity<Void> deleteById(@PathVariable("id") Long id) {
         carService.deleteById(id);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<CarResponseDTO> updateById(
+            @PathVariable("id") Long id, @RequestBody CarRequestDTO update){
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(carService.updateById(id, update));
     }
 }
