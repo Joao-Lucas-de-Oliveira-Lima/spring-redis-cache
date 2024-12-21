@@ -54,4 +54,11 @@ public class CarController {
             @RequestParam(name = "model", defaultValue = "") String name) {
         return ResponseEntity.ok(carService.findByModelContainingIgnoreCase(name, pageable));
     }
+
+    @PostMapping
+    public ResponseEntity<CarResponseDTO> save(@RequestBody CarRequestDTO newCar){
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(carService.save(newCar));
+    }
 }

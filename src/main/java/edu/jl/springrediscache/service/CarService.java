@@ -11,5 +11,6 @@ public interface CarService {
     CarResponseDTO findByIdWithoutCacheSupport(Long id);
     void deleteById(Long id);
     CarResponseDTO updateById(Long id, CarRequestDTO update);
+    CarResponseDTO save(CarRequestDTO newCar);
     Page<CarResponseDTO> findByModelContainingIgnoreCase(String name, Pageable pageable);
 }
