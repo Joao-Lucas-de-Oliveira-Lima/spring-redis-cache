@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,6 +59,13 @@ public class CarServiceImplementation implements CarService {
         mapper.mapToObject(update, carToBeUpdated);
         CarModel updatedCar = carRepository.save(carToBeUpdated);
         return mapper.convertToObject(updatedCar, CarResponseDTO.class);
+    }
+
+    @Override
+    @Cacheable(value = "carPage")
+    public Page<CarResponseDTO> findByModelContainingIgnoreCase(String name, Pageable pageable) {
+        Page<CarModel> carModelPage = carRepository.findByModelContainingIgnoreCase(name, pageable);
+        return carModelPage.map(carModel -> mapper.convertToObject(carModel, CarResponseDTO.class));
     }
 
 }
