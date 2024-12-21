@@ -43,4 +43,11 @@ public class CarController {
                 .status(HttpStatus.OK)
                 .body(carService.updateById(id, update));
     }
+
+    @PostMapping
+    public ResponseEntity<CarResponseDTO> save(@RequestBody CarRequestDTO newCar){
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(carService.save(newCar));
+    }
 }
