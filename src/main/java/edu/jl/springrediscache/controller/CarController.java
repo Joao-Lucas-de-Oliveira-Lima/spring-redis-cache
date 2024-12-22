@@ -4,6 +4,10 @@ import edu.jl.springrediscache.dto.car.CarRequestDTO;
 import edu.jl.springrediscache.dto.car.CarResponseDTO;
 import edu.jl.springrediscache.service.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,10 +42,17 @@ public class CarController {
 
     @PutMapping("/{id}")
     public ResponseEntity<CarResponseDTO> updateById(
-            @PathVariable("id") Long id, @RequestBody CarRequestDTO update){
+            @PathVariable("id") Long id, @RequestBody CarRequestDTO update) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(carService.updateById(id, update));
+    }
+  
+    @GetMapping
+    public ResponseEntity<Page<CarResponseDTO>> findByModelContainingIgnoreCase(
+            @PageableDefault(direction = Sort.Direction.ASC, sort = {"model"}) Pageable pageable,
+            @RequestParam(name = "model", defaultValue = "") String name) {
+        return ResponseEntity.ok(carService.findByModelContainingIgnoreCase(name, pageable));
     }
 
     @PostMapping
