@@ -5,6 +5,8 @@ import edu.jl.springrediscache.dto.car.CarResponseDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.net.URI;
+
 
 public interface CarService {
     CarResponseDTO findByIdWithCacheSupport(Long id);

@@ -47,7 +47,7 @@ public class CarController {
                 .status(HttpStatus.OK)
                 .body(carService.updateById(id, update));
     }
-
+  
     @GetMapping
     public ResponseEntity<Page<CarResponseDTO>> findByModelContainingIgnoreCase(
             @PageableDefault(direction = Sort.Direction.ASC, sort = {"model"}) Pageable pageable,
