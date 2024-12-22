@@ -1,6 +1,7 @@
 package edu.jl.springrediscache.exception;
 
 import edu.jl.springrediscache.dto.excepiton.ExceptionDTO;
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -26,6 +27,13 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
     public ResponseEntity<ExceptionDTO> handlerResourceNotFoundException(WebRequest webRequest, Exception exception){
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
+                .body(buildExceptionDTO(webRequest, exception));
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ExceptionDTO> handlerBadRequestException(WebRequest webRequest, Exception exception){
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
                 .body(buildExceptionDTO(webRequest, exception));
     }
 
