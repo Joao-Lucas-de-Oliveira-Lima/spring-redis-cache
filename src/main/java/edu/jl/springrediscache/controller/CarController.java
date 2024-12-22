@@ -50,7 +50,7 @@ public class CarController {
 
     @GetMapping
     public ResponseEntity<Page<CarResponseDTO>> findByModelContainingIgnoreCase(
-            @PageableDefault(size = 10, page = 0, direction = Sort.Direction.ASC, sort = {"model"}) Pageable pageable,
+            @PageableDefault(direction = Sort.Direction.ASC, sort = {"model"}) Pageable pageable,
             @RequestParam(name = "model", defaultValue = "") String name) {
         return ResponseEntity.ok(carService.findByModelContainingIgnoreCase(name, pageable));
     }

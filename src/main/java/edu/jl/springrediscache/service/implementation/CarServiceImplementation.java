@@ -11,10 +11,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+// TODO: Improve cache behavior
+/*
+    Ensure that outdated entries in the 'carPage' cache are properly removed or updated.
+    This should account for changes caused by delete, create, or update operations in the 'car' cache
+    that may impact the data consistency.
+*/
 
 @Service
 public class CarServiceImplementation implements CarService {
@@ -45,15 +53,21 @@ public class CarServiceImplementation implements CarService {
     }
 
     @Override
-    @CacheEvict(value = "car", key = "#id")
+    @Caching(evict = {
+            @CacheEvict(value = "carPage", allEntries = true),
+            @CacheEvict(value = "car", key = "#id")
+    })
     public void deleteById(Long id) {
         carRepository.deleteById(id);
     }
 
     @Override
     @Transactional
-    @CachePut(value = "car", key = "#id")
-    public CarResponseDTO updateById(Long id, CarRequestDTO update) throws ResourceNotFoundException{
+    @Caching(
+            evict = @CacheEvict(value = "carPage", allEntries = true),
+            put = @CachePut(value = "car", key = "#id")
+    )
+    public CarResponseDTO updateById(Long id, CarRequestDTO update) throws ResourceNotFoundException {
         CarModel carToBeUpdated = carRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(String.format("Car with id %s not found!", id)));
         mapper.mapToObject(update, carToBeUpdated);
@@ -62,16 +76,19 @@ public class CarServiceImplementation implements CarService {
     }
 
     @Override
-    @CachePut(value = "car", key = "#result.id")
+    @Caching(
+            put = @CachePut(value = "car", key = "#result.id"),
+            evict = @CacheEvict(value = "carPage", allEntries = true)
+    )
     public CarResponseDTO save(CarRequestDTO newCar) {
         CarModel carSaved = carRepository.save(mapper.convertToObject(newCar, CarModel.class));
         return mapper.convertToObject(carSaved, CarResponseDTO.class);
     }
+
     @Override
     @Cacheable(value = "carPage")
     public Page<CarResponseDTO> findByModelContainingIgnoreCase(String name, Pageable pageable) {
         Page<CarModel> carModelPage = carRepository.findByModelContainingIgnoreCase(name, pageable);
         return carModelPage.map(carModel -> mapper.convertToObject(carModel, CarResponseDTO.class));
     }
-
 }
