@@ -1,9 +1,9 @@
 package edu.jl.springrediscache.dto.excepiton;
 
-import java.util.Date;
+import java.time.Instant;
 
-public record ExceptionDTO (
-        Date timestamp,
+public record ExceptionDTO(
+        Instant timestamp,
         String message,
         String details) {
 }
