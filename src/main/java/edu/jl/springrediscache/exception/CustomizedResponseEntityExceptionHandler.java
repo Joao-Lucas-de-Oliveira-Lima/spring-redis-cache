@@ -10,17 +10,26 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.util.Date;
+import java.time.Instant;
 
 @RestController
 @ControllerAdvice
 public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ExceptionDTO> handlerException(WebRequest webRequest, Exception exception){
+    public ResponseEntity<ExceptionDTO> handlerException(WebRequest webRequest){
+        String errorMessage  = "An unexpected error occurred. Please try again later or " +
+                "contact support if the problem persists.";
+
+        ExceptionDTO exceptionDTO = new ExceptionDTO(
+                Instant.now(),
+                errorMessage,
+                webRequest.getDescription(false)
+        );
+
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(buildExceptionDTO(webRequest, exception));
+                .body(exceptionDTO);
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
@@ -38,6 +47,6 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
     }
 
     private ExceptionDTO buildExceptionDTO(WebRequest webRequest, Exception exception){
-        return new ExceptionDTO(new Date(), exception.getMessage(), webRequest.getDescription(false));
+        return new ExceptionDTO(Instant.now(), exception.getMessage(), webRequest.getDescription(false));
     }
 }

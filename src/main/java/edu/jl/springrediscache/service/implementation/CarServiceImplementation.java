@@ -41,7 +41,7 @@ public class CarServiceImplementation implements CarService {
         //System.out.printf("Searching for car with id: %s.%n", id);
         CarModel carFound = carRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(String.format("Car with id %s not found!", id)));
-        return mapper.convertToObject(carFound, CarResponseDTO.class);
+        return mapper.mapProperties(carFound, CarResponseDTO.class);
     }
 
     @Override
@@ -49,7 +49,7 @@ public class CarServiceImplementation implements CarService {
         //System.out.printf("Searching for car with id: %s.%n", id);
         CarModel carFound = carRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(String.format("Car with id %s not found!", id)));
-        return mapper.convertToObject(carFound, CarResponseDTO.class);
+        return mapper.mapProperties(carFound, CarResponseDTO.class);
     }
 
     @Override
@@ -70,9 +70,9 @@ public class CarServiceImplementation implements CarService {
     public CarResponseDTO updateById(Long id, CarRequestDTO update) throws ResourceNotFoundException {
         CarModel carToBeUpdated = carRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(String.format("Car with id %s not found!", id)));
-        mapper.mapToObject(update, carToBeUpdated);
+        mapper.mapProperties(update, carToBeUpdated);
         CarModel updatedCar = carRepository.save(carToBeUpdated);
-        return mapper.convertToObject(updatedCar, CarResponseDTO.class);
+        return mapper.mapProperties(updatedCar, CarResponseDTO.class);
     }
 
     @Override
@@ -81,14 +81,14 @@ public class CarServiceImplementation implements CarService {
             evict = @CacheEvict(value = "carPage", allEntries = true)
     )
     public CarResponseDTO save(CarRequestDTO newCar) {
-        CarModel carSaved = carRepository.save(mapper.convertToObject(newCar, CarModel.class));
-        return mapper.convertToObject(carSaved, CarResponseDTO.class);
+        CarModel carSaved = carRepository.save(mapper.mapProperties(newCar, CarModel.class));
+        return mapper.mapProperties(carSaved, CarResponseDTO.class);
     }
   
     @Override
     @Cacheable(value = "carPage")
     public Page<CarResponseDTO> findByModelContainingIgnoreCase(String name, Pageable pageable) {
         Page<CarModel> carModelPage = carRepository.findByModelContainingIgnoreCase(name, pageable);
-        return carModelPage.map(carModel -> mapper.convertToObject(carModel, CarResponseDTO.class));
+        return carModelPage.map(carModel -> mapper.mapProperties(carModel, CarResponseDTO.class));
     }
 }
