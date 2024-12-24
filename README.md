@@ -8,13 +8,17 @@ This project demonstrates a Spring Boot application that uses Redis as a cache t
 After the Spring context is fully initialized, the following log demonstrates the results of calling the `findById` endpoints:
 ```log
 Starting the performance tests:
+
 CarResponseDTO(id=1, make=Honda, model=Odyssey, yearOfRelease=2007)
 CarResponseDTO(id=1, make=Honda, model=Odyssey, yearOfRelease=2007)
 CarResponseDTO(id=1, make=Honda, model=Odyssey, yearOfRelease=2007)
+
 Elapsed time for method calls WITH cache support: 457 milliseconds.
+
 CarResponseDTO(id=1, make=Honda, model=Odyssey, yearOfRelease=2007)
 CarResponseDTO(id=1, make=Honda, model=Odyssey, yearOfRelease=2007)
 CarResponseDTO(id=1, make=Honda, model=Odyssey, yearOfRelease=2007)
+
 Elapsed time for method calls WITHOUT cache support: 551 milliseconds.
 ```
 
@@ -22,9 +26,9 @@ Elapsed time for method calls WITHOUT cache support: 551 milliseconds.
 
 ## Prerequisites
 
-- **Java** 21
-- **Maven**
-- **Docker Desktop**
+- [**Java JDK 21**](https://www.oracle.com/br/java/technologies/downloads/#java21)
+- [**Maven 3.x or later**](https://maven.apache.org/download.cgi)
+- [**Docker Desktop**](https://www.docker.com/products/docker-desktop/)
 
 ---
 
